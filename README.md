@@ -2,6 +2,16 @@
 
 Concurrent wave equation with CUDA
 
+## Build
+
+- Serial version
+
+      make serial_wave
+
+- CUDA version
+
+      make cuda_wave
+
 ## Reference
 
 [Wave equation](https://en.wikipedia.org/wiki/Wave_equation)
