@@ -30,6 +30,14 @@ void check_param(void) {
     }
 }
 
+void printfinal() {
+    for (int i = 1; i <= tpoints; i++) {
+        printf("%6.4f ", values[i]);
+        if (i%10 == 0)
+            printf("\n");
+    }
+}
+
 int main(int argc, char *argv[]) {
     sscanf(argv[1],"%d",&tpoints);
     sscanf(argv[2],"%d",&nsteps);
@@ -37,6 +45,10 @@ int main(int argc, char *argv[]) {
     int size = (MAXPOINTS + 2) * sizeof(float);
     cudaMalloc(&dValues, size);
 
+    cudaMemcpy(values, dValues, size, cudaMemcpyDeviceToHost);
+    printf("Printing final results...\n");
+    printfinal();
+    printf("\nDone.\n\n");
     cudaFree(dValues);
     return 0;
 }
