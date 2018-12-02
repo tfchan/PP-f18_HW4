@@ -33,11 +33,22 @@ void check_param(void) {
     printf("Using points = %d, steps = %d\n", tpoints, nsteps);
 }
 
+// Device function to calculate new values using wave equation
+__device__ float do_math(float value, float oldval) {
+    float dtime = 0.3;
+    float c = 1.0;
+    float dx = 1.0;
+    float tau = c * dtime / dx;
+    float sqtau = tau * tau;
+    return (2.0 * value - oldval + sqtau * (-2.0) * value);
+}
+
 // Kernel for computing value of a point at specific time with speific time step
 __global__ void init_and_update(float *dValues, int tpoints, int nsteps) {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
-    float value, oldval;
+    float value, oldval, newval;
     if (index >= 1 && index <= tpoints) {
+        // Initialization
         value = sin(2.0 * PI * (index - 1) / (tpoints - 1));
         oldval = value;
     }
