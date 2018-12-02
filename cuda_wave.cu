@@ -50,7 +50,13 @@ __global__ void init_and_update(float *dValues, int tpoints, int nsteps) {
     if (index >= 1 && index <= tpoints) {
         // Initialization
         value = sin(2.0 * PI * (index - 1) / (tpoints - 1));
-        oldval = value;
+        // Update
+        for (int i= 1; i <= nsteps; i++) {
+            newval = (index == 1 || index == tpoints)? 0:do_math(value, oldval);
+            oldval = value;
+            value = newval;
+        }
+        dValues[index] = value;
     }
 }
 
