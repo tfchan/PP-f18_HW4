@@ -51,13 +51,13 @@ int main(int argc, char *argv[]) {
     sscanf(argv[1],"%d",&tpoints);
     sscanf(argv[2],"%d",&nsteps);
     check_param();
-    cudaMalloc(&dValues, size);
+    cudaMalloc(&dValues, size); // Allocate memory in device
     numOfBlocks = (tpoints - 1) / kThreadsPerBlock + 1; // Compute and ceil number of block
     init_and_update<<<numOfBlocks, kThreadsPerBlock>>>(dValues, tpoints, nsteps);
-    cudaMemcpy(values, dValues, size, cudaMemcpyDeviceToHost);
+    cudaMemcpy(values, dValues, size, cudaMemcpyDeviceToHost);  // Copy result back to main memory
     printf("Printing final results...\n");
     printfinal();
     printf("\nDone.\n\n");
-    cudaFree(dValues);
+    cudaFree(dValues);  // Free memory in device
     return 0;
 }
