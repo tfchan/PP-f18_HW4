@@ -8,7 +8,6 @@
 int nsteps,     // Number of time steps
     tpoints;    // Total points along string
 float values[MAXPOINTS + 2];    // Values at time t
-float *dValues; // Values in device
 
 void check_param(void) {
     char tchar[20];
@@ -39,10 +38,12 @@ void printfinal() {
 }
 
 int main(int argc, char *argv[]) {
+    float *dValues; // Values in device
+    int size = (MAXPOINTS + 2) * sizeof(float); // Size of memory to store values
+
     sscanf(argv[1],"%d",&tpoints);
     sscanf(argv[2],"%d",&nsteps);
     check_param();
-    int size = (MAXPOINTS + 2) * sizeof(float);
     cudaMalloc(&dValues, size);
 
     cudaMemcpy(values, dValues, size, cudaMemcpyDeviceToHost);
