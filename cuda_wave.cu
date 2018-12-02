@@ -4,6 +4,7 @@
 #define MAXPOINTS 1000000
 #define MAXSTEPS 1000000
 #define MINPOINTS 20
+#define PI 3.14159265
 
 const int kThreadsPerBlock = 256;
 
@@ -33,6 +34,12 @@ void check_param(void) {
 
 // Kernel for computing value of a point at specific time with speific time step
 __global__ void init_and_update(float *dValues, int tpoints, int nsteps) {
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+    float value, oldval;
+    if (index >= 1 && index <= tpoints) {
+        value = sin(2.0 * PI * (index - 1) / (tpoints - 1));
+        oldval = value;
+    }
 }
 
 void printfinal() {
@@ -53,6 +60,8 @@ int main(int argc, char *argv[]) {
     check_param();
     cudaMalloc(&dValues, size); // Allocate memory in device
     numOfBlocks = (tpoints - 1) / kThreadsPerBlock + 1; // Compute and ceil number of block
+    printf("Initializing points on the line...\n");
+    printf("Updating all points for all time steps...\n");
     init_and_update<<<numOfBlocks, kThreadsPerBlock>>>(dValues, tpoints, nsteps);
     cudaMemcpy(values, dValues, size, cudaMemcpyDeviceToHost);  // Copy result back to main memory
     printf("Printing final results...\n");
