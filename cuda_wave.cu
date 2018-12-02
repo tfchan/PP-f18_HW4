@@ -30,6 +30,7 @@ void check_param(void) {
         if ((nsteps < 1) || (nsteps > MAXSTEPS))
             printf("Invalid. Please enter value between 1 and %d\n", MAXSTEPS);
     }
+    printf("Using points = %d, steps = %d\n", tpoints, nsteps);
 }
 
 // Kernel for computing value of a point at specific time with speific time step
