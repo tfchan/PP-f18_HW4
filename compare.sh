@@ -11,8 +11,10 @@ if [ $# -eq 2 ]; then
     time ./cuda_wave $1 $2 > $cuda_result_file
     nDiff=$(diff -y --suppress-common-lines $serial_result_file $cuda_result_file | wc -l)
     echo "Numeber of different line: ${nDiff}"
-    echo "Diff result store at ${diff_result_file}"
-    diff $serial_result_file $cuda_result_file > $diff_result_file
+    if [ $nDiff -ne 0 ]; then
+        echo "Diff result store at ${diff_result_file}"
+        diff $serial_result_file $cuda_result_file > $diff_result_file
+    fi
     rm $serial_result_file $cuda_result_file
 else
     echo $usage
