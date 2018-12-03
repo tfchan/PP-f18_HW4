@@ -46,13 +46,16 @@ __device__ float do_math(float value, float oldval) {
 // Kernel for computing value of a point at specific time with speific time step
 __global__ void init_and_update(float *dValues, int tpoints, int nsteps) {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
+    float fac, x;
     float value, oldval, newval;
     if (index >= 1 && index <= tpoints) {
         // Initialization
-        value = sin(2.0 * PI * (index - 1) / (tpoints - 1));
+        fac = 2.0 * PI; // Double store in float
+        x = (index - 1.0) / (tpoints - 1.0);    // Double store in float
+        value = sin((double)(fac * x)); // Force sin calculation in double
         oldval = value;
         // Update
-        for (int i= 1; i <= nsteps; i++) {
+        for (int i = 1; i <= nsteps; i++) {
             newval = (index == 1 || index == tpoints)? 0:do_math(value, oldval);
             oldval = value;
             value = newval;
